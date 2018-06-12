@@ -30,3 +30,4 @@ At rest, the micro:bit is always subject to Earth gravity, whose magnitude is me
 
 # Streaming the data from the serial port
 
+

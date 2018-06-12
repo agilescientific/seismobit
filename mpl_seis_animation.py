@@ -16,13 +16,6 @@ s = serial.Serial(port)
 s.baudrate = baud
 
 
-def data_gen(t=0):
-    cnt = 0
-    while cnt < 1000:
-        cnt += 1
-        t += 0.1
-        yield t, np.sin(2*np.pi*t) * np.exp(-t/10.)
-
 def data_stream(t=0):
     d = []
     cnt = 0
@@ -43,7 +36,7 @@ def init():
     return line,
 
 fig, ax = plt.subplots()
-line, = ax.plot([], [], lw=2, mec='k', ms=20)
+line, = ax.plot([], [], lw=1, mec='k', ms=20)
 ax.grid(alpha=0.5)
 ax.set_xlabel('time (s)')
 xdata, ydata = [], []
@@ -63,6 +56,6 @@ def run(data):
 
     return line,
 
-ani = animation.FuncAnimation(fig, run, data_stream, blit=False, interval=10,
+ani = animation.FuncAnimation(fig, run, data_stream, blit=True, interval=4,
                               repeat=True, init_func=init)
 plt.show()
