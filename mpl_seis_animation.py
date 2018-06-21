@@ -10,50 +10,66 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+# Choose the port cooresponding to the name where
+# You plugged in the USB connection to the microbit
 port = "/dev/tty.usbmodem1412"  
+
+# The standard baud rate of the microbit
 baud = 115200  
 s = serial.Serial(port)  
 s.baudrate = baud
 
 
 def data_stream(t=0):
-    d = []
+    x, y, z = [], [], []
     cnt = 0
     while cnt < 1000:
         cnt += 1
         t += 0.1
-        b = float(s.readline()[0:5])
-        print(b)
-        yield t, b
-
+        try:
+            x = float(s.readline()[0:5])
+            y = float(s.readline()[0:5])
+            z = float(s.readline()[0:5])
+            print(x, y, z)
+        except:
+            pass
+        yield t, x, y, z
+        
 
 def init():
     ax.set_ylim(500, 1600)
-    ax.set_xlim(0, 5)
+    ax.set_xlim(0, 50)
+    del tdata[:]
     del xdata[:]
     del ydata[:]
-    line.set_data(xdata, ydata)
-    return line,
+    del zdata[:]
+    linex.set_data(tdata, xdata)
+    liney.set_data(tdata, ydata)
+    linez.set_data(tdata, zdata)
+    return linex, liney, linez
 
 fig, ax = plt.subplots()
 line, = ax.plot([], [], lw=1, mec='k', ms=20)
 ax.grid(alpha=0.5)
 ax.set_xlabel('time (s)')
-xdata, ydata = [], []
+xdata, ydata, zdata = [], [], []
 
 
 def run(data):
     # update the data
-    t, y = data
-    xdata.append(t)
+    t, x = data
+    tdata.append(t)
+    xdata.append(x)
     ydata.append(y)
-    xmin, xmax = ax.get_xlim()
+    zdata.append(z)
+    tmin, tmax = ax.get_xlim()
 
-    if t >= xmax:
-        ax.set_xlim(t, t+xmax)
+    if t >= tmax:
+        ax.set_xlim(t, t+tmax)
         ax.figure.canvas.draw()
-    line.set_data(xdata, ydata)
-
+    linex.set_data(tdata, xdata)
+    liney.set_data(tdata, ydata)
+    linez.set_data(tdata, zdata)
     return line,
 
 ani = animation.FuncAnimation(fig, run, data_stream, blit=True, interval=0.1,
