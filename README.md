@@ -30,4 +30,4 @@ At rest, the micro:bit is always subject to Earth gravity, whose magnitude is me
 
 # Streaming the data from the serial port
 
-
+Run the file called `mpl_seis_animation.py`. This file is a work in progress. Please feel free to modify it and make it better!
